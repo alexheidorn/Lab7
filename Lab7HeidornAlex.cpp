@@ -76,9 +76,19 @@ void dealCards(list<PlayingCard> cards, queue<PlayingCard> & p1queue, queue<Play
 
 }
 
-void play(queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
+int main() {
+    list<PlayingCard> cards = generateShuffledDeck();
+    queue<PlayingCard> p1queue;
+    queue<PlayingCard> p2queue;
+    dealCards(cards,p1queue,p2queue);
+    int rounds = 0;
+
+    // Play the game until one players wins and report how many rounds that took
     PlayingCard p1Card(0, 0);
     PlayingCard p2Card(0,0);
+
+    list<PlayingCard> p1PlayPile;
+    list<PlayingCard> p2PlayPile;
 
     do{
         //both players put their cards down
@@ -119,15 +129,5 @@ void play(queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & roun
     until one player is out of cards
 
     the other player is declared the winner*/
-}
-
-int main() {
-    list<PlayingCard> cards = generateShuffledDeck();
-    queue<PlayingCard> p1queue;
-    queue<PlayingCard> p2queue;
-    dealCards(cards,p1queue,p2queue);
-    int rounds = 0;
-    // Play the game until one players wins and report how many rounds that took
-    play();
     return 0;
 }
