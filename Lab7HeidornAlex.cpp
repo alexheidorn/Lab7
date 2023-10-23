@@ -93,7 +93,9 @@ int main() {
     do{
         //both players put their cards down
         p1Card = p1queue.front();
+        p1queue.pop();
         p2Card = p2queue.front();
+        p2queue.pop();
 
         //if p1 card has higher number, they collect both cards and to pile
         if (p1Card.shortCardName() > p2Card.shortCardName()){
@@ -107,7 +109,17 @@ int main() {
         }
         //War
         else{
+            p1PlayPile.push_front(p1Card);
+            
+            for(int i = 0; i < 3; i++){
+                p1Card = p1queue.front();
+                p1queue.pop();
+                p1queue.push(p1Card);
 
+                p2Card = p2queue.front();
+                p2queue.pop();
+                p2queue.push(p1Card);
+            }
         }
         rounds++;
     }while (!p1queue.empty() && !p2queue.empty())
