@@ -81,43 +81,11 @@ string playCard(queue<PlayingCard> & queue){
 }
 
 void compare(PlayingCard p1Card, PlayingCard p2Card, queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
-    //if p1 card has higher number, they collect both cards and add to hand
-    if (p1Card.shortCardName() > p2Card.shortCardName()){
-        p1queue.push(p1Card);
-        p1queue.push(p2Card);
-        cout << "Player 1 wins round" << rounds << "!\n";
-    }
-
-    else if (p1Card.shortCardName() < p2Card.shortCardName()){
-        p2queue.push(p1Card);
-        p2queue.push(p2Card);
-        cout << "Player 2 wins round " << rounds << "!\n";
-    }
-    //War
-    else{
-        war(p1Card, p2Card, p1queue, p2queue);
-    }
+    
 }
 
 void war(PlayingCard p1Card, PlayingCard p2Card, queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue){
-    list<PlayingCard> p1PlayPile;
-    list<PlayingCard> p2PlayPile;
-    cout << "Cards are equal. Commence the war!\n";
-    p1PlayPile.push_front(p1Card);
-    p2PlayPile.push_front(p2Card);
-
-    //player 1 playpile
-    for(int i = 0; i < 3; i++){
-        p1Card = p1queue.front();
-        p1queue.pop();
-        p1PlayPile.push_front(p1Card);
-        cout << "Player 1 lays card " << i << " face down.\n";
-
-        p2Card = p2queue.front();
-        p2queue.pop();
-        p2PlayPile.push_front(p2Card);
-        cout << "Player 1 lays card " << i << " face down.\n";
-    }
+    
     
     compare(p1Card, p2Card, p1queue, p2queue);
 }
@@ -143,8 +111,67 @@ int main() {
         p2Card = p2queue.front();
         p2queue.pop();
         cout << "Player 2 plays " << p2Card.longCardName() << endl;
-        //compare the cards, calling war() recursively, if needed
-        compare(p1Card, p2Card, p1queue, p2queue, rounds);
+        //if p1 card has higher number, they collect both cards and add to hand
+        if (p1Card.shortCardName() > p2Card.shortCardName()){
+            p1queue.push(p1Card);
+            p1queue.push(p2Card);
+            cout << "Player 1 wins round" << rounds << "!\n";
+        }
+        //else p2 wins, collects both cards
+        else if (p1Card.shortCardName() < p2Card.shortCardName()){
+            p2queue.push(p1Card);
+            p2queue.push(p2Card);
+            cout << "Player 2 wins round " << rounds << "!\n";
+        }
+        //War
+        else{
+            list<PlayingCard> p1PlayPile;
+            list<PlayingCard> p2PlayPile;
+            cout << "Cards are equal. Commence the war!\n";
+            p1PlayPile.push_front(p1Card);
+            p2PlayPile.push_front(p2Card);
+
+            
+            for(int i = 0; i < 3; i++){
+                //player 1 playpile
+                p1Card = p1queue.front();
+                p1queue.pop();
+                p1PlayPile.push_front(p1Card);
+                cout << "Player 1 lays card " << i << " face down.\n";
+
+                //player 2 playpile
+                p2Card = p2queue.front();
+                p2queue.pop();
+                p2PlayPile.push_front(p2Card);
+                cout << "Player 1 lays card " << i << " face down.\n";
+            }
+
+            //both players play a new card, face up
+            p1Card = p1queue.front();
+            p1queue.pop();
+            cout << "Player 1 plays " << p1Card.longCardName() << endl;
+            p2Card = p2queue.front();
+            p2queue.pop();
+            cout << "Player 2 plays " << p2Card.longCardName() << endl;
+
+            //check who gets all the cards
+            //if p1 card has higher number, they collect ALL cards and add to hand
+            if (p1Card.shortCardName() > p2Card.shortCardName()){
+                for(auto itr : p1PlayPile){
+                    p1queue.push(itr);
+                }
+                
+                p1queue.push(p2Card);
+                cout << "Player 1 wins round" << rounds << "!\n";
+            }
+
+            else if (p1Card.shortCardName() < p2Card.shortCardName()){
+                p2queue.push(p1Card);
+                p2queue.push(p2Card);
+                cout << "Player 2 wins round " << rounds << "!\n";
+            }
+            
+        }
     }while (!p1queue.empty() && !p2queue.empty())
 
 
