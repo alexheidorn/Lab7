@@ -100,6 +100,7 @@ void addToQueue(queue<PlayingCard> & q, list<PlayingCard> & playPile){
 //war prototype to be called in playAndCompare
 void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
             queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds);
+            
 void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
             queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
     //add a card to the play pile for both players
@@ -113,20 +114,29 @@ void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPi
 
     //if p1 card has higher number, they collect ALL cards and add to hand
     if (p1PlayPile.front().shortCardName() > p2PlayPile.front().shortCardName()){
-        cout << "Player 1 wins round " << rounds << "!\n\n";
-        addToQueue(p1queue, p1PlayPile);
-        addToQueue(p1queue, p2PlayPile);
+        p1queue.push(p1PlayPile.front());
+        p1PlayPile.pop_front();
+        p1queue.push(p2PlayPile.front());
+        p2PlayPile.pop_front();
+        cout << "Player 1 wins round" << rounds << "!\n";
     }
-    //else p2 wins, collects all cards
+
     else if (p1PlayPile.front().shortCardName() < p2PlayPile.front().shortCardName()){
-        cout << "Player 2 wins round " << rounds << "!\n\n";
-        addToQueue(p2queue, p1PlayPile);
-        addToQueue(p2queue, p2PlayPile);
+        p2queue.push(p1PlayPile.front());
+        p1PlayPile.pop_front();
+        p2queue.push(p2PlayPile.front());
+        p2PlayPile.pop_front();
+        cout << "Player 2 wins round " << rounds << "!\n";
     }
-    //War
+
+    /*War fxn is useless, a player will always win a round. there will never be a tie
+    * because suits have precedence too.
     else{
         war(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
     }
+    */
+
+    //making sure players have correct number of cards
     string dummy;
     cout << "Player 1 has " << p1queue.size() << " cards.\n";
     cout << "Player 2 has " << p2queue.size() << " cards.\n";
