@@ -76,9 +76,10 @@ void dealCards(list<PlayingCard> cards, queue<PlayingCard> & p1queue, queue<Play
 
 }
 
-string playCard(queue<PlayingCard> & queue){
+/*string playCard(queue<PlayingCard> & queue){
 
 }
+*/
 
 /* @ Params
 * q: the queue that receives the cards
@@ -92,6 +93,9 @@ void addToQueue(queue<PlayingCard> & q, list<PlayingCard> playPile){
     }
 }
 
+//war prototype to be called in playAndCompare
+void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
+            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds);
 void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
             queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
     //add a card to the play pile for both players
@@ -105,19 +109,19 @@ void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPi
 
     //if p1 card has higher number, they collect ALL cards and add to hand
     if (p1PlayPile.front().shortCardName() > p2PlayPile.front().shortCardName()){
-        cout << "Player 1 wins round" << rounds << "!\n";
+        cout << "Player 1 wins round " << rounds << "!\n\n";
         addToQueue(p1queue, p1PlayPile);
         addToQueue(p1queue, p2PlayPile);
     }
     //else p2 wins, collects all cards
     else if (p1PlayPile.front().shortCardName() < p2PlayPile.front().shortCardName()){
-        cout << "Player 2 wins round" << rounds << "!\n";
+        cout << "Player 2 wins round " << rounds << "!\n\n";
         addToQueue(p2queue, p1PlayPile);
         addToQueue(p2queue, p2PlayPile);
     }
     //War
     else{
-        war();
+        war(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
     }
 }
 
@@ -127,6 +131,8 @@ void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile,
 
     //add 3 unknown cards to both players playPiles       
     for(int i = 0; i < 3; i++){
+        //add check to see if a player runs out cards? means other player wins the war, takes all cards?
+
         //player 1 playpile
         p1PlayPile.push_front(p1queue.front());
         p1queue.pop();
@@ -156,7 +162,16 @@ int main() {
         rounds++;
         //both players put their cards down
         playAndCompare(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
-    }while (!p1queue.empty() && !p2queue.empty())
+    }while (!p1queue.empty() && !p2queue.empty());
+
+    string winner;
+    if(p1queue.empty()){
+        winner = "Player 2";
+    }
+    else{
+        winner = "Player 1";
+    }
+    cout << winner << " won in " << rounds << " rounds!";
 
 
     /*do
