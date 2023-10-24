@@ -10,6 +10,7 @@
 #include <stdlib.h>
 #include <vector>
 #include <queue>
+#include <stack>
 using namespace std;
 
 class PlayingCard {
@@ -98,22 +99,23 @@ int main() {
     int rounds = 0;
 
     // Play the game until one players wins and report how many rounds that took
-    PlayingCard p1Card(0,0);
-    PlayingCard p2Card(0,0);
+    stack<PlayingCard> p1PlayPile;
+    stack<PlayingCard> p2PlayPile;
 
 
     do{
         rounds++;
         //both players put their cards down
-        p1Card = p1queue.front();
+        p1PlayPile.push(p1queue.front());
         p1queue.pop();
-        cout << "Player 1 plays " << p1Card.longCardName() << endl;
-        p2Card = p2queue.front();
+        cout << "Player 1 plays " << p1PlayPile.top().longCardName() << endl;
+        p2PlayPile.push(p2queue.front());
         p2queue.pop();
-        cout << "Player 2 plays " << p2Card.longCardName() << endl;
+        cout << "Player 2 plays " << p2PlayPile.top().longCardName() << endl;
         //if p1 card has higher number, they collect both cards and add to hand
-        if (p1Card.shortCardName() > p2Card.shortCardName()){
-            p1queue.push(p1Card);
+        if (p1PlayPile.top().shortCardName() > p2PlayPile.top().shortCardName()){
+            p1queue.push(p1PlayPile.front());
+            p1PlayPile.pop_front();
             p1queue.push(p2Card);
             cout << "Player 1 wins round" << rounds << "!\n";
         }
@@ -159,6 +161,7 @@ int main() {
             if (p1Card.shortCardName() > p2Card.shortCardName()){
                 for(auto itr : p1PlayPile){
                     p1queue.push(itr);
+                    p1PlayPile.pop_front();
                 }
                 
                 p1queue.push(p2Card);
