@@ -90,6 +90,7 @@ void addToQueue(queue<PlayingCard> & q, list<PlayingCard> playPile){
     for(auto itr : playPile){
         q.push(itr);
         playPile.pop_front();
+        
     }
 }
 
@@ -123,6 +124,8 @@ void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPi
     else{
         war(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
     }
+    cout << "Player 1 has " << p1queue.size() << " cards.\n";
+    cout << "Player 2 has " << p2queue.size() << " cards.\n";
 }
 
 void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
@@ -158,6 +161,8 @@ int main() {
     list<PlayingCard> p1PlayPile;
     list<PlayingCard> p2PlayPile;
 
+    cout << "Player 1 has " << p1queue.size() << " cards.\n";
+    cout << "Player 2 has " << p2queue.size() << " cards.\n";
     do{
         rounds++;
         //both players put their cards down
