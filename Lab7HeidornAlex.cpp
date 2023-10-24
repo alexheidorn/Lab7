@@ -80,14 +80,65 @@ string playCard(queue<PlayingCard> & queue){
 
 }
 
-void compare(PlayingCard p1Card, PlayingCard p2Card, queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
-    
+/* @ Params
+* q: the queue that receives the cards
+* playPile: the pile that GIVES the cards
+
+*/
+void addToQueue(queue<PlayingCard> & q, list<PlayingCard> playPile){
+    for(auto itr : playPile){
+        q.push(itr);
+        playPile.pop_front();
+    }
 }
 
-void war(PlayingCard p1Card, PlayingCard p2Card, queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue){
-    
-    
-    compare(p1Card, p2Card, p1queue, p2queue);
+void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
+            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
+    //add a card to the play pile for both players
+    p1PlayPile.push_front(p1queue.front());
+    p1queue.pop();
+    cout << "Player 1 plays " << p1PlayPile.front().longCardName() << endl;
+
+    p2PlayPile.push_front(p2queue.front());
+    p2queue.pop();
+    cout << "Player 2 plays " << p2PlayPile.front().longCardName() << endl;
+
+    //if p1 card has higher number, they collect ALL cards and add to hand
+    if (p1PlayPile.front().shortCardName() > p2PlayPile.front().shortCardName()){
+        cout << "Player 1 wins round" << rounds << "!\n";
+        addToQueue(p1queue, p1PlayPile);
+        addToQueue(p1queue, p2PlayPile);
+    }
+    //else p2 wins, collects all cards
+    else if (p1PlayPile.front().shortCardName() < p2PlayPile.front().shortCardName()){
+        cout << "Player 2 wins round" << rounds << "!\n";
+        addToQueue(p2queue, p1PlayPile);
+        addToQueue(p2queue, p2PlayPile);
+    }
+    //War
+    else{
+        war();
+    }
+}
+
+void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
+            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
+    cout << "Cards are equal. Commence the war!\n";     
+
+    //add 3 unknown cards to both players playPiles       
+    for(int i = 0; i < 3; i++){
+        //player 1 playpile
+        p1PlayPile.push_front(p1queue.front());
+        p1queue.pop();
+        cout << "Player 1 lays card " << i << " face down.\n";
+
+        //player 2 playpile
+        p2PlayPile.push_front(p1queue.front());
+        p2queue.pop();
+        cout << "Player 2 lays card " << i << " face down.\n";
+    }
+    //play and compare a new card, calling war recursively if needed
+    playAndCompare(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
 }
 
 int main() {
@@ -101,85 +152,10 @@ int main() {
     list<PlayingCard> p1PlayPile;
     list<PlayingCard> p2PlayPile;
 
-
     do{
         rounds++;
         //both players put their cards down
-        p1PlayPile.push_front(p1queue.front());
-        p1queue.pop();
-        cout << "Player 1 plays " << p1PlayPile.front().longCardName() << endl;
-        p2PlayPile.push_front(p2queue.front());
-        p2queue.pop();
-        cout << "Player 2 plays " << p2PlayPile.front().longCardName() << endl;
-        //if p1 card has higher number, they collect both cards and add to hand
-        if (p1PlayPile.front().shortCardName() > p2PlayPile.front().shortCardName()){
-            cout << "Player 1 wins round" << rounds << "!\n";
-            for(auto itr : p1PlayPile){
-                p1queue.push(itr);
-                p1PlayPile.pop_front();
-            }
-            
-            p1queue.push(p1PlayPile.front());
-            p1PlayPile.pop_front();
-            p1queue.push(p2Card);
-            
-        }
-        //else p2 wins, collects both cards
-        else if (p1Card.shortCardName() < p2Card.shortCardName()){
-            p2queue.push(p1Card);
-            p2queue.push(p2Card);
-            cout << "Player 2 wins round " << rounds << "!\n";
-        }
-        //War
-        else{
-            list<PlayingCard> p1PlayPile;
-            list<PlayingCard> p2PlayPile;
-            cout << "Cards are equal. Commence the war!\n";
-            p1PlayPile.push_front(p1Card);
-            p2PlayPile.push_front(p2Card);
-
-            
-            for(int i = 0; i < 3; i++){
-                //player 1 playpile
-                p1Card = p1queue.front();
-                p1queue.pop();
-                p1PlayPile.push_front(p1Card);
-                cout << "Player 1 lays card " << i << " face down.\n";
-
-                //player 2 playpile
-                p2Card = p2queue.front();
-                p2queue.pop();
-                p2PlayPile.push_front(p2Card);
-                cout << "Player 1 lays card " << i << " face down.\n";
-            }
-
-            //both players play a new card, face up
-            p1Card = p1queue.front();
-            p1queue.pop();
-            cout << "Player 1 plays " << p1Card.longCardName() << endl;
-            p2Card = p2queue.front();
-            p2queue.pop();
-            cout << "Player 2 plays " << p2Card.longCardName() << endl;
-
-            //check who gets all the cards
-            //if p1 card has higher number, they collect ALL cards and add to hand
-            if (p1Card.shortCardName() > p2Card.shortCardName()){
-                for(auto itr : p1PlayPile){
-                    p1queue.push(itr);
-                    p1PlayPile.pop_front();
-                }
-                
-                p1queue.push(p2Card);
-                cout << "Player 1 wins round" << rounds << "!\n";
-            }
-
-            else if (p1Card.shortCardName() < p2Card.shortCardName()){
-                p2queue.push(p1Card);
-                p2queue.push(p2Card);
-                cout << "Player 2 wins round " << rounds << "!\n";
-            }
-            
-        }
+        playAndCompare(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
     }while (!p1queue.empty() && !p2queue.empty())
 
 
