@@ -10,7 +10,6 @@
 #include <stdlib.h>
 #include <vector>
 #include <queue>
-#include <stack>
 using namespace std;
 
 class PlayingCard {
@@ -99,25 +98,31 @@ int main() {
     int rounds = 0;
 
     // Play the game until one players wins and report how many rounds that took
-    stack<PlayingCard> p1PlayPile;
-    stack<PlayingCard> p2PlayPile;
+    list<PlayingCard> p1PlayPile;
+    list<PlayingCard> p2PlayPile;
 
 
     do{
         rounds++;
         //both players put their cards down
-        p1PlayPile.push(p1queue.front());
+        p1PlayPile.push_front(p1queue.front());
         p1queue.pop();
-        cout << "Player 1 plays " << p1PlayPile.top().longCardName() << endl;
-        p2PlayPile.push(p2queue.front());
+        cout << "Player 1 plays " << p1PlayPile.front().longCardName() << endl;
+        p2PlayPile.push_front(p2queue.front());
         p2queue.pop();
-        cout << "Player 2 plays " << p2PlayPile.top().longCardName() << endl;
+        cout << "Player 2 plays " << p2PlayPile.front().longCardName() << endl;
         //if p1 card has higher number, they collect both cards and add to hand
-        if (p1PlayPile.top().shortCardName() > p2PlayPile.top().shortCardName()){
+        if (p1PlayPile.front().shortCardName() > p2PlayPile.front().shortCardName()){
+            cout << "Player 1 wins round" << rounds << "!\n";
+            for(auto itr : p1PlayPile){
+                p1queue.push(itr);
+                p1PlayPile.pop_front();
+            }
+            
             p1queue.push(p1PlayPile.front());
             p1PlayPile.pop_front();
             p1queue.push(p2Card);
-            cout << "Player 1 wins round" << rounds << "!\n";
+            
         }
         //else p2 wins, collects both cards
         else if (p1Card.shortCardName() < p2Card.shortCardName()){
