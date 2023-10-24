@@ -130,7 +130,7 @@ void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPi
     string dummy;
     cout << "Player 1 has " << p1queue.size() << " cards.\n";
     cout << "Player 2 has " << p2queue.size() << " cards.\n";
-    cin >> dummy;
+    //cin >> dummy;
 }
 
 void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
