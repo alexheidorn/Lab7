@@ -76,12 +76,137 @@ void dealCards(list<PlayingCard> cards, queue<PlayingCard> & p1queue, queue<Play
 
 }
 
+/*string playCard(queue<PlayingCard> & queue){
+
+}
+*/
+
+/* @ Params
+* q: the queue that receives the cards
+* playPile: the pile that GIVES the cards
+
+*/
+void addToQueue(queue<PlayingCard> & q, list<PlayingCard> & playPile){
+    for(auto itr : playPile){
+        cout << "Play pile has " << playPile.size() << " cards.\n";
+        
+        q.push(itr);
+        playPile.pop_front();
+        //check how many cards are in piles
+        cout << "Play pile has " << playPile.size() << " cards.\n";
+    }
+}
+
+//war prototype to be called in playAndCompare
+void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
+            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds);
+void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
+            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
+    //add a card to the play pile for both players
+    p1PlayPile.push_front(p1queue.front());
+    p1queue.pop();
+    cout << "Player 1 plays " << p1PlayPile.front().longCardName() << endl;
+
+    p2PlayPile.push_front(p2queue.front());
+    p2queue.pop();
+    cout << "Player 2 plays " << p2PlayPile.front().longCardName() << endl;
+
+    //if p1 card has higher number, they collect ALL cards and add to hand
+    if (p1PlayPile.front().shortCardName() > p2PlayPile.front().shortCardName()){
+        cout << "Player 1 wins round " << rounds << "!\n\n";
+        addToQueue(p1queue, p1PlayPile);
+        addToQueue(p1queue, p2PlayPile);
+    }
+    //else p2 wins, collects all cards
+    else if (p1PlayPile.front().shortCardName() < p2PlayPile.front().shortCardName()){
+        cout << "Player 2 wins round " << rounds << "!\n\n";
+        addToQueue(p2queue, p1PlayPile);
+        addToQueue(p2queue, p2PlayPile);
+    }
+    //War
+    else{
+        war(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
+    }
+    string dummy;
+    cout << "Player 1 has " << p1queue.size() << " cards.\n";
+    cout << "Player 2 has " << p2queue.size() << " cards.\n";
+    cin >> dummy;
+}
+
+void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
+            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
+    cout << "Cards are equal. Commence the war!\n";     
+
+    //add 3 unknown cards to both players playPiles       
+    for(int i = 0; i < 3; i++){
+        //add check to see if a player runs out cards? means other player wins the war, takes all cards?
+
+        //player 1 playpile
+        p1PlayPile.push_front(p1queue.front());
+        p1queue.pop();
+        cout << "Player 1 lays card " << i << " face down.\n";
+
+        //player 2 playpile
+        p2PlayPile.push_front(p1queue.front());
+        p2queue.pop();
+        cout << "Player 2 lays card " << i << " face down.\n";
+    }
+    //play and compare a new card, calling war recursively if needed
+    playAndCompare(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
+}
+
 int main() {
     list<PlayingCard> cards = generateShuffledDeck();
     queue<PlayingCard> p1queue;
     queue<PlayingCard> p2queue;
     dealCards(cards,p1queue,p2queue);
     int rounds = 0;
+
     // Play the game until one players wins and report how many rounds that took
+    list<PlayingCard> p1PlayPile;
+    list<PlayingCard> p2PlayPile;
+
+    cout << "Player 1 has " << p1queue.size() << " cards.\n";
+    cout << "Player 2 has " << p2queue.size() << " cards.\n";
+    do{
+        rounds++;
+        //both players put their cards down
+        playAndCompare(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
+    }while (!p1queue.empty() && !p2queue.empty());
+
+    string winner;
+    if(p1queue.empty()){
+        winner = "Player 2";
+    }
+    else{
+        winner = "Player 1";
+    }
+    cout << winner << " won in " << rounds << " rounds!";
+
+
+    /*do
+
+        player 1 puts their top card down
+
+        player 2 puts their top card down
+
+        //compare fxn{
+        if player 1's card has a higher number (A > K > Q > J > 10 > 9 > 8 > 7 > 6 > 5 > 4 > 3 > 2) then
+            player 1 collects both cards and adds them to their pile of cards (their queue)
+        else if player 2's card has a higher number
+            player 2 collects both cards and adds them to their pile of cards
+        else a "War" occurs
+            war fxn{
+            players add their top 3 cards to the played pile and 
+            }
+
+            compare{
+                "play" their next card, and the process repeats
+            }
+        }
+
+    until one player is out of cards
+
+    the other player is declared the winner*/
     return 0;
 }
