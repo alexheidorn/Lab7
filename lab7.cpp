@@ -75,96 +75,7 @@ void dealCards(list<PlayingCard> cards, queue<PlayingCard> & p1queue, queue<Play
     }
 
 }
-
-/*string playCard(queue<PlayingCard> & queue){
-
-}
-*/
-
-/* @ Params
-* q: the queue that receives the cards
-* playPile: the pile that GIVES the cards
-
-*/
-void addToQueue(queue<PlayingCard> & q, list<PlayingCard> & playPile){
-    for(auto itr : playPile){
-        cout << "Play pile has " << playPile.size() << " cards.\n";
-        
-        q.push(itr);
-        playPile.pop_front();
-        //check how many cards are in piles
-        cout << "Play pile has " << playPile.size() << " cards.\n";
-    }
-}
-
-//war prototype to be called in playAndCompare
-void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
-            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds);
             
-void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
-            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
-    //add a card to the play pile for both players
-    p1PlayPile.push_front(p1queue.front());
-    p1queue.pop();
-    cout << "Player 1 plays " << p1PlayPile.front().longCardName() << endl;
-
-    p2PlayPile.push_front(p2queue.front());
-    p2queue.pop();
-    cout << "Player 2 plays " << p2PlayPile.front().longCardName() << endl;
-
-    //if p1 card has higher number, they collect ALL cards and add to hand
-    if (p1PlayPile.front().shortCardName() > p2PlayPile.front().shortCardName()){
-        p1queue.push(p1PlayPile.front());
-        p1PlayPile.pop_front();
-        p1queue.push(p2PlayPile.front());
-        p2PlayPile.pop_front();
-        cout << "Player 1 wins round " << rounds << "!\n\n";
-    }
-
-    else if (p1PlayPile.front().shortCardName() < p2PlayPile.front().shortCardName()){
-        p2queue.push(p1PlayPile.front());
-        p1PlayPile.pop_front();
-        p2queue.push(p2PlayPile.front());
-        p2PlayPile.pop_front();
-        cout << "Player 2 wins round " << rounds << "!\n\n";
-    }
-
-    /*War fxn is useless, a player will always win a round. there will never be a tie
-    * because suits have precedence too.
-    else{
-        war(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
-    }
-    */
-
-    //making sure players have correct number of cards
-    string dummy;
-    cout << "Player 1 has " << p1queue.size() << " cards.\n";
-    cout << "Player 2 has " << p2queue.size() << " cards.\n";
-    //cin >> dummy;
-}
-
-void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
-            queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
-    cout << "Cards are equal. Commence the war!\n";     
-
-    //add 3 unknown cards to both players playPiles       
-    for(int i = 0; i < 3; i++){
-        //add check to see if a player runs out cards? means other player wins the war, takes all cards?
-
-        //player 1 playpile
-        p1PlayPile.push_front(p1queue.front());
-        p1queue.pop();
-        cout << "Player 1 lays card " << i << " face down.\n";
-
-        //player 2 playpile
-        p2PlayPile.push_front(p1queue.front());
-        p2queue.pop();
-        cout << "Player 2 lays card " << i << " face down.\n";
-    }
-    //play and compare a new card, calling war recursively if needed
-    playAndCompare(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
-}
-
 int main() {
     list<PlayingCard> cards = generateShuffledDeck();
     queue<PlayingCard> p1queue;
@@ -173,15 +84,42 @@ int main() {
     int rounds = 0;
 
     // Play the game until one players wins and report how many rounds that took
-    list<PlayingCard> p1PlayPile;
-    list<PlayingCard> p2PlayPile;
+    PlayingCard p1Card(0,0);
+    PlayingCard p2Card(0,0);
 
-    cout << "Player 1 has " << p1queue.size() << " cards.\n";
-    cout << "Player 2 has " << p2queue.size() << " cards.\n";
     do{
         rounds++;
         //both players put their cards down
-        playAndCompare(p1PlayPile, p2PlayPile, p1queue, p2queue, rounds);
+        p1Card = p1queue.front();
+        p1queue.pop();
+        cout << "Player 1 plays " << p1Card.longCardName() << endl;
+
+        p2Card = p2queue.front();
+        p2queue.pop();
+        cout << "Player 2 plays " << p2Card.longCardName() << endl;
+
+        //if p1 card has higher number, they collect both cards and to pile
+        if (p1Card.shortCardName() > p2Card.shortCardName()){
+            p1queue.push(p1Card);
+            p1queue.push(p2Card);
+            cout << "Player 1 wins round " << rounds << "!\n\n";
+        }
+
+        else if (p1Card.shortCardName() < p2Card.shortCardName()){
+            p2queue.push(p1Card);
+            p2queue.push(p2Card);
+            cout << "Player 2 wins round " << rounds << "!\n\n";
+        }
+        //War
+        else{/*War fxn is useless, a player will always win a round. there will never be a tie
+            * because suits have precedence too.*/
+        }
+
+        //making sure players have correct number of cards
+        string dummy;
+        cout << "Player 1 has " << p1queue.size() << " cards.\n";
+        cout << "Player 2 has " << p2queue.size() << " cards.\n";
+        //cin >> dummy;
     }while (!p1queue.empty() && !p2queue.empty());
 
     string winner;
