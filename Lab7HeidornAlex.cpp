@@ -5,6 +5,10 @@
 *  
 */
 
+/* Examples
+
+*/
+
 #include <iostream>
 #include <list>
 #include <stdlib.h>
@@ -76,17 +80,12 @@ void dealCards(list<PlayingCard> cards, queue<PlayingCard> & p1queue, queue<Play
 
 }
 
-/*string playCard(queue<PlayingCard> & queue){
-
-}
-*/
-
 /* @ Params
 * q: the queue that receives the cards
 * playPile: the pile that GIVES the cards
 
 */
-void addToQueue(queue<PlayingCard> & q, list<PlayingCard> playPile){
+void addToQueue(queue<PlayingCard> & q, list<PlayingCard> & playPile){
     for(auto itr : playPile){
         q.push(itr);
         playPile.pop_front();
@@ -97,6 +96,7 @@ void addToQueue(queue<PlayingCard> & q, list<PlayingCard> playPile){
 //war prototype to be called in playAndCompare
 void war(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
             queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds);
+
 void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPile, 
             queue<PlayingCard> & p1queue, queue<PlayingCard> & p2queue, int & rounds){
     //add a card to the play pile for both players
@@ -115,10 +115,11 @@ void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPi
         addToQueue(p1queue, p2PlayPile);
     }
     //else p2 wins, collects all cards
+    //p2 MUST collect cards in opposite order, otherwise game is infinite
     else if (p1PlayPile.front().shortCardName() < p2PlayPile.front().shortCardName()){
         cout << "Player 2 wins round " << rounds << "!\n\n";
-        addToQueue(p2queue, p1PlayPile);
         addToQueue(p2queue, p2PlayPile);
+        addToQueue(p2queue, p1PlayPile);
     }
     //War
     else{
