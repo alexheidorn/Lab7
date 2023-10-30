@@ -118,7 +118,7 @@ void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPi
         p1PlayPile.pop_front();
         p1queue.push(p2PlayPile.front());
         p2PlayPile.pop_front();
-        cout << "Player 1 wins round" << rounds << "!\n";
+        cout << "Player 1 wins round " << rounds << "!\n\n";
     }
 
     else if (p1PlayPile.front().shortCardName() < p2PlayPile.front().shortCardName()){
@@ -126,7 +126,7 @@ void playAndCompare(list<PlayingCard> & p1PlayPile, list<PlayingCard> & p2PlayPi
         p1PlayPile.pop_front();
         p2queue.push(p2PlayPile.front());
         p2PlayPile.pop_front();
-        cout << "Player 2 wins round " << rounds << "!\n";
+        cout << "Player 2 wins round " << rounds << "!\n\n";
     }
 
     /*War fxn is useless, a player will always win a round. there will never be a tie
