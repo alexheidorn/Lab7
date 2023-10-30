@@ -106,8 +106,8 @@ int main() {
         }
 
         else if (p1Card.shortCardName() < p2Card.shortCardName()){
-            p2queue.push(p1Card);
             p2queue.push(p2Card);
+            p2queue.push(p1Card);
             cout << "Player 2 wins round " << rounds << "!\n\n";
         }
         //War
@@ -116,10 +116,11 @@ int main() {
         }
 
         //making sure players have correct number of cards
-        string dummy;
+        //string dummy;
         cout << "Player 1 has " << p1queue.size() << " cards.\n";
         cout << "Player 2 has " << p2queue.size() << " cards.\n";
         //cin >> dummy;
+        
     }while (!p1queue.empty() && !p2queue.empty());
 
     string winner;
